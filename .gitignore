@@ -1,0 +1,12 @@
+#
+
+*~
+DEADJOE
+*.class
+*.jar
+*.war
+*.ear
+target/*
+.idea
+.idea/*
+*.iml
