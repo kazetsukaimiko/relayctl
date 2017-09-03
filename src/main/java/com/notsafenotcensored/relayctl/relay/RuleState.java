@@ -1,6 +1,6 @@
 package com.notsafenotcensored.relayctl.relay;
 
-public enum RelayState {
+public enum RuleState {
     OFF, // I don't do anything if the relay isn't off.
     ON,  // I don't do anything if the relay isn't on.
     FORCE_OFF, // If the relay is ON, I force to OFF before changing my state.

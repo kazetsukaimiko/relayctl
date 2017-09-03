@@ -10,7 +10,8 @@ import java.util.Objects;
 public class Relay {
     private int id = -1;
     private String name = "";
-    private List<Rule> ruleList = new ArrayList<>();
+    private List<Rule> onRules = new ArrayList<>();
+    private List<Rule> offRules = new ArrayList<>();
     private transient GpioPinDigitalOutput backingPin;
 
     public int getId() {
@@ -37,16 +38,27 @@ public class Relay {
         this.name = name; return this;
     }
 
-    public List<Rule> getRuleList() {
-        return ruleList;
+    public List<Rule> getOnRules() {
+        return onRules;
     }
 
-    public void setRuleList(List<Rule> ruleList) {
-        this.ruleList = ruleList;
+    public void setOnRules(List<Rule> onRules) {
+        this.onRules = onRules;
+    }
+    public Relay onRules(List<Rule> onRules) {
+        this.onRules = onRules; return this;
     }
 
-    public Relay ruleList(List<Rule> ruleList) {
-        this.ruleList = ruleList; return this;
+    public List<Rule> getOffRules() {
+        return offRules;
+    }
+
+    public void setOffRules(List<Rule> offRules) {
+        this.offRules = offRules;
+    }
+
+    public Relay offRules(List<Rule> offRules) {
+        this.offRules = offRules; return this;
     }
 
     public GpioPinDigitalOutput getBackingPin() {
@@ -65,10 +77,11 @@ public class Relay {
         return (backingPin != null)? backingPin.isState(PinState.HIGH) : false;
     }
 
+    // Returns TRUE if on.
     public boolean on() {
         if (backingPin != null) {
-            for (Rule rule : ruleList) {
-                if (!rule.honor()) {
+            for (Rule rule : onRules) {
+                if (!rule.honor(this)) {
                     return false;
                 }
             }
@@ -76,8 +89,14 @@ public class Relay {
         } return getState();
     }
 
+    // Returns TRUE if off.
     public boolean off() {
         if (backingPin != null) {
+            for (Rule rule : offRules) {
+                if (!rule.honor(this)) {
+                    return false;
+                }
+            }
             backingPin.setState(PinState.LOW);
         }   return !getState();
     }

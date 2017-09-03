@@ -34,13 +34,16 @@ public class RelayController {
             RaspiPin.GPIO_29
     );
 
-    List<GpioPinDigitalOutput> provision(List<Pin> pins) {
+    List<Relay> provision(List<Pin> pins) {
         final int[] i = {0};
         return pins.stream()
                 .map(pin -> gpio.provisionDigitalOutputPin(pin, "RELAY_"+i[0]++, PinState.LOW))
+                .map(gpioPDO -> new Relay())
                 .collect(Collectors.toList());
     }
-    private List<GpioPinDigitalOutput> provisioned = provision(pins);
+    //private List<GpioPinDigitalOutput> provisioned = provision(pins);
+
+    private List<Relay> relays = loadRelays(pins);
 
     public Optional<Integer> findRelayId(RaspiPin raspiPin) {
         int relayId = pins.indexOf(raspiPin);
