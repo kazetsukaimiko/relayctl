@@ -24,8 +24,11 @@ public class RelayctlMain {
     }
 
     public static void test() throws InterruptedException {
+        System.out.println("Making rc.");
         RelayController rc = new RelayController();
+        System.out.println("Setting relays");
         for (GpioPinDigitalOutput gpioPDO : rc.getRelays()) {
+            System.out.println("Setting gpio "+gpioPDO.getName());
             gpioPDO.setState(PinState.HIGH);
             Thread.sleep(750);
         }
