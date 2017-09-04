@@ -29,8 +29,18 @@ public class RelayctlMain {
         System.out.println("Setting relays");
         for (GpioPinDigitalOutput gpioPDO : rc.getRelays()) {
             System.out.println("Setting gpio "+gpioPDO.getName());
-            gpioPDO.setState(PinState.HIGH);
-            Thread.sleep(750);
+            gpioPDO.high();
+            Thread.sleep(250);
+        }
+        for (GpioPinDigitalOutput gpioPDO : rc.getRelays()) {
+            System.out.println("Setting gpio "+gpioPDO.getName());
+            gpioPDO.low();
+            Thread.sleep(250);
+        }
+        for (GpioPinDigitalOutput gpioPDO : rc.getRelays()) {
+            System.out.println("Setting gpio "+gpioPDO.getName());
+            gpioPDO.toggle();
+            Thread.sleep(250);
         }
         rc.shutdown();
     }

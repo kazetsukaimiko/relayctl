@@ -16,8 +16,10 @@ public class RelayController {
     // Default, get from config file.
     // ~/.config/relayctl/config.json
     private List<Pin> pins = Arrays.asList(
+            RaspiPin.GPIO_07,
             RaspiPin.GPIO_00,
             RaspiPin.GPIO_01,
+            RaspiPin.GPIO_02,
             RaspiPin.GPIO_03,
             RaspiPin.GPIO_04,
             RaspiPin.GPIO_05,
@@ -36,8 +38,14 @@ public class RelayController {
     List<GpioPinDigitalOutput> provision(List<Pin> pins) {
         final int[] i = {0};
         List<GpioPinDigitalOutput> provisioned = pins.stream()
-                .map(pin -> gpio.provisionDigitalOutputPin(pin, "RELAY_"+i[0]++, PinState.LOW))
+                .map(pin -> {
+                    String relay = "RELAY_"+i[0]++;
+                    System.out.println("Init: "+relay);
+                    GpioPinDigitalOutput gpioPinDigitalOutput = gpio.provisionDigitalOutputPin(pin, relay);
+                    return gpioPinDigitalOutput;
+                })
                 .collect(Collectors.toList());
+        System.out.println("Setting shutdown");
         provisioned.forEach(gpioPDO -> gpioPDO.setShutdownOptions(true, PinState.LOW));
         return provisioned;
     }
