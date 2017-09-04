@@ -33,7 +33,7 @@
     <dependency>
       <groupId>com.pi4j</groupId>
       <artifactId>pi4j-core</artifactId>
-      <version>1.1</version>
+      <version>1.2-SNAPSHOT</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
@@ -116,12 +116,19 @@
 
 
   <build>
-    <finalName>node</finalName>
+    <finalName>relayctl</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.6</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>com.notsafenotcensored.relayctl.RelayctlMain</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
         <executions>
           <execution>
             <goals>
@@ -146,6 +153,52 @@
           </dependency>
         </dependencies>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <filters>
+                <filter>
+                  <!--
+                      Exclude files that sign a jar
+                      (one or multiple of the dependencies).
+                      One may not repack a signed jar without
+                      this, or you will get a
+                      SecurityException at program start.
+                  -->
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                    <exclude>META-INF/*.INF</exclude> <!-- This one may not be required -->
+                  </excludes>
+                </filter>
+              </filters>
+
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
+  <repositories>
+    <repository>
+      <id>oss-snapshots-repo</id>
+      <name>Sonatype OSS Maven Repository</name>
+      <url>https://oss.sonatype.org/content/groups/public</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
+
 </project>
