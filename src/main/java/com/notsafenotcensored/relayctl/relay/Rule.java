@@ -58,24 +58,4 @@ public class Rule {
         }
     }
 
-    public boolean honor(Relay from) {
-        if (getRelay() == null || getState() == null || isCyclic(new HashSet<>(Arrays.asList(from)))) {
-            return true; // Cannot make rules this way.
-        }
-        return enforce(relay, getState());
-    }
-
-    public boolean isCyclic(Set<Relay> aboveMe) {
-        if (aboveMe.contains(getRelay())) {
-            return true;
-        }
-        Set<Relay> meAndBefore = new HashSet<>(aboveMe);
-        meAndBefore.add(getRelay());
-        for (Rule rule : getRelay().getRuleList()) {
-            if (rule.isCyclic(meAndBefore)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

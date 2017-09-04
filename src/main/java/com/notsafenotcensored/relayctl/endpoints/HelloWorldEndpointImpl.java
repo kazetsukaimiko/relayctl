@@ -16,13 +16,5 @@ public class HelloWorldEndpointImpl implements HelloWorldEndpoint {
         return "Hello World";
     }
 
-    @Inject
-    private Node node;
-
-    @GET
-    @Path("/port")
-    public String getPort() {
-        return String.valueOf(node.getPort());
-    }
 }
 

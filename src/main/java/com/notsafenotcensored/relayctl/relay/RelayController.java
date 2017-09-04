@@ -3,7 +3,6 @@ package com.notsafenotcensored.relayctl.relay;
 import com.pi4j.io.gpio.*;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -34,27 +33,22 @@ public class RelayController {
             RaspiPin.GPIO_29
     );
 
-    List<Relay> provision(List<Pin> pins) {
+    List<GpioPinDigitalOutput> provision(List<Pin> pins) {
         final int[] i = {0};
-        return pins.stream()
+        List<GpioPinDigitalOutput> provisioned = pins.stream()
                 .map(pin -> gpio.provisionDigitalOutputPin(pin, "RELAY_"+i[0]++, PinState.LOW))
-                .map(gpioPDO -> new Relay())
                 .collect(Collectors.toList());
+        provisioned.forEach(gpioPDO -> gpioPDO.setShutdownOptions(true, PinState.LOW));
+        return provisioned;
     }
-    //private List<GpioPinDigitalOutput> provisioned = provision(pins);
 
-    private List<Relay> relays = loadRelays(pins);
+    private List<GpioPinDigitalOutput> relays = provision(pins);
 
-    public Optional<Integer> findRelayId(RaspiPin raspiPin) {
-        int relayId = pins.indexOf(raspiPin);
-        if (relayId >= 0) {
-            return Optional.of(relayId);
-        }
-        return Optional.empty();
+    public List<GpioPinDigitalOutput> getRelays() {
+        return relays;
     }
-    public Optional<GpioPinDigitalOutput> findPin(RaspiPin raspiPin) {
-        return findRelayId(raspiPin).map(provisioned::get);
-    }
-    
 
+    public void shutdown() {
+        gpio.shutdown();
+    }
 }

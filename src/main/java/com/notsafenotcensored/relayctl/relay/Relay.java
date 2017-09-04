@@ -80,11 +80,6 @@ public class Relay {
     // Returns TRUE if on.
     public boolean on() {
         if (backingPin != null) {
-            for (Rule rule : onRules) {
-                if (!rule.honor(this)) {
-                    return false;
-                }
-            }
             backingPin.setState(PinState.HIGH);
         } return getState();
     }
@@ -92,11 +87,6 @@ public class Relay {
     // Returns TRUE if off.
     public boolean off() {
         if (backingPin != null) {
-            for (Rule rule : offRules) {
-                if (!rule.honor(this)) {
-                    return false;
-                }
-            }
             backingPin.setState(PinState.LOW);
         }   return !getState();
     }
