@@ -2,14 +2,15 @@ package com.notsafenotcensored.relayctl;
 
 
 import com.notsafenotcensored.relayctl.relay.RelayController;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.*;
 import io.undertow.Undertow;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import org.jboss.resteasy.cdi.CdiInjectorFactory;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
+
+import java.util.Scanner;
 
 public class RelayctlMain {
 
@@ -26,21 +27,19 @@ public class RelayctlMain {
     public static void test() throws InterruptedException {
         System.out.println("Making rc.");
         RelayController rc = new RelayController();
+
         System.out.println("Setting relays");
         for (GpioPinDigitalOutput gpioPDO : rc.getRelays()) {
             System.out.println("Setting gpio "+gpioPDO.getName());
-            gpioPDO.high();
-            Thread.sleep(250);
+            gpioPDO.setState(PinState.LOW);
+            promptEnterKey();
         }
+
+        System.out.println("Setting relays");
         for (GpioPinDigitalOutput gpioPDO : rc.getRelays()) {
             System.out.println("Setting gpio "+gpioPDO.getName());
-            gpioPDO.low();
-            Thread.sleep(250);
-        }
-        for (GpioPinDigitalOutput gpioPDO : rc.getRelays()) {
-            System.out.println("Setting gpio "+gpioPDO.getName());
-            gpioPDO.toggle();
-            Thread.sleep(250);
+            gpioPDO.setState(PinState.HIGH);
+            promptEnterKey();
         }
         rc.shutdown();
     }
@@ -63,6 +62,12 @@ public class RelayctlMain {
                 .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
 
         server.deploy(di);
+    }
+
+    public static void promptEnterKey(){
+        System.out.println("Press \"ENTER\" to continue...");
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
     }
 
 }

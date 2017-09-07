@@ -5,10 +5,9 @@
   <groupId>com.notsafenotcensored</groupId>
   <artifactId>relayctl</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   <name>Relayctl</name>
   <url>http://maven.apache.org</url>
-
 
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -22,173 +21,113 @@
     <junit.version>4.11</junit.version>
   </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <version>7.0</version>
-      <scope>provided</scope>
-    </dependency>
+  <modules>
+    <module>relayctl-service</module>
+    <module>relayctl-api</module>
+  </modules>
 
-    <dependency>
-      <groupId>com.pi4j</groupId>
-      <artifactId>pi4j-core</artifactId>
-      <version>1.2-SNAPSHOT</version>
-    </dependency>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.notsafenotcensored.relayctl</groupId>
+        <artifactId>relayctl-api</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
-    <dependency>
-      <groupId>org.reflections</groupId>
-      <artifactId>reflections</artifactId>
-      <version>0.9.11</version>
-    </dependency>
+      <dependency>
+        <groupId>com.notsafenotcensored.relayctl</groupId>
+        <artifactId>relayctl-service</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
 
-    <!-- https://mvnrepository.com/artifact/io.undertow/undertow-core -->
-    <dependency>
-      <groupId>io.undertow</groupId>
-      <artifactId>undertow-core</artifactId>
-      <version>${undertow.version}</version>
-    </dependency>
+      <dependency>
+        <groupId>javax</groupId>
+        <artifactId>javaee-api</artifactId>
+        <version>7.0</version>
+        <scope>provided</scope>
+      </dependency>
 
-    <dependency>
-      <groupId>io.undertow</groupId>
-      <artifactId>undertow-servlet</artifactId>
-      <version>${undertow.version}</version>
-    </dependency>
+      <dependency>
+        <groupId>com.pi4j</groupId>
+        <artifactId>pi4j-core</artifactId>
+        <version>1.2-SNAPSHOT</version>
+      </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.jboss.weld/weld-core -->
-    <dependency>
-      <groupId>org.jboss.weld</groupId>
-      <artifactId>weld-core</artifactId>
-      <version>${weld.version}</version>
-    </dependency>
+      <!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
+      <dependency>
+        <groupId>org.reflections</groupId>
+        <artifactId>reflections</artifactId>
+        <version>0.9.11</version>
+      </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.jboss.weld.servlet/weld-servlet-core -->
-    <dependency>
-      <groupId>org.jboss.weld.servlet</groupId>
-      <artifactId>weld-servlet-core</artifactId>
-      <version>${weld.version}</version>
-    </dependency>
+      <!-- https://mvnrepository.com/artifact/io.undertow/undertow-core -->
+      <dependency>
+        <groupId>io.undertow</groupId>
+        <artifactId>undertow-core</artifactId>
+        <version>${undertow.version}</version>
+      </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jaxrs -->
-    <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-jaxrs</artifactId>
-      <version>${resteasy.version}</version>
-    </dependency>
+      <dependency>
+        <groupId>io.undertow</groupId>
+        <artifactId>undertow-servlet</artifactId>
+        <version>${undertow.version}</version>
+      </dependency>
 
-    <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-undertow</artifactId>
-      <version>${resteasy.version}</version>
-    </dependency>
+      <!-- https://mvnrepository.com/artifact/org.jboss.weld/weld-core -->
+      <dependency>
+        <groupId>org.jboss.weld</groupId>
+        <artifactId>weld-core</artifactId>
+        <version>${weld.version}</version>
+      </dependency>
 
-    <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-cdi</artifactId>
-      <version>${resteasy.version}</version>
-    </dependency>
+      <!-- https://mvnrepository.com/artifact/org.jboss.weld.servlet/weld-servlet-core -->
+      <dependency>
+        <groupId>org.jboss.weld.servlet</groupId>
+        <artifactId>weld-servlet-core</artifactId>
+        <version>${weld.version}</version>
+      </dependency>
 
-    <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-jackson-provider</artifactId>
-      <version>${resteasy.version}</version>
-    </dependency>
+      <!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jaxrs -->
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jaxrs</artifactId>
+        <version>${resteasy.version}</version>
+      </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/eclipselink -->
-    <dependency>
-      <groupId>org.eclipse.persistence</groupId>
-      <artifactId>eclipselink</artifactId>
-      <version>2.7.0</version>
-    </dependency>
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-undertow</artifactId>
+        <version>${resteasy.version}</version>
+      </dependency>
 
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-cdi</artifactId>
+        <version>${resteasy.version}</version>
+      </dependency>
 
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-      <version>${junit.version}</version>
-    </dependency>
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jackson-provider</artifactId>
+        <version>${resteasy.version}</version>
+      </dependency>
 
+      <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/eclipselink -->
+      <dependency>
+        <groupId>org.eclipse.persistence</groupId>
+        <artifactId>eclipselink</artifactId>
+        <version>2.7.0</version>
+      </dependency>
 
-  </dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <scope>test</scope>
+        <version>${junit.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-
-
-  <build>
-    <finalName>relayctl</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.6</version>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>com.notsafenotcensored.relayctl.RelayctlMain</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.20</version>
-        <configuration>
-          <parallel>methods</parallel>
-          <threadCount>${tests.threadCount}</threadCount>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-junit47</artifactId>
-            <version>2.20</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.1.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <filters>
-                <filter>
-                  <!--
-                      Exclude files that sign a jar
-                      (one or multiple of the dependencies).
-                      One may not repack a signed jar without
-                      this, or you will get a
-                      SecurityException at program start.
-                  -->
-                  <artifact>*:*</artifact>
-                  <excludes>
-                    <exclude>META-INF/*.SF</exclude>
-                    <exclude>META-INF/*.RSA</exclude>
-                    <exclude>META-INF/*.INF</exclude> <!-- This one may not be required -->
-                  </excludes>
-                </filter>
-              </filters>
-
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-    </plugins>
-  </build>
   <repositories>
     <repository>
       <id>oss-snapshots-repo</id>
