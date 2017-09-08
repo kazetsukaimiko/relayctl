@@ -16,12 +16,12 @@ public class DefaultConfiguration extends Configuration {
         setRelays(generateDefaults());
     }
 
-    private List<Relay> generateDefaults() {
-        List<Relay> relays = new ArrayList<>();
+    private List<RelayConfig> generateDefaults() {
+        List<RelayConfig> relays = new ArrayList<>();
         int[] i = {1};
         return pins.stream().map(pin -> {
             String relayName = "RELAY_"+i[0]++;
-            return new Relay().id(pin.getAddress()).name(relayName);
+            return new RelayConfig().id(pin.getAddress()).name(relayName);
         }).collect(Collectors.toList());
     }
 

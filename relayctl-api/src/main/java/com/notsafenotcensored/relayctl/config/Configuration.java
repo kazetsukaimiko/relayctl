@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Configuration {
     private int listenPort = 7272;
-    private List<Relay> relays = new ArrayList<>();
+    private List<RelayConfig> relays = new ArrayList<>();
 
     public int getListenPort() {
         return listenPort;
@@ -17,11 +17,11 @@ public class Configuration {
         this.listenPort = listenPort;
     }
 
-    public List<Relay> getRelays() {
+    public List<RelayConfig> getRelays() {
         return relays;
     }
 
-    public void setRelays(List<Relay> relays) {
+    public void setRelays(List<RelayConfig> relays) {
         this.relays = relays;
     }
 }

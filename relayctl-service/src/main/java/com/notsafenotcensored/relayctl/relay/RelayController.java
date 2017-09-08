@@ -1,6 +1,8 @@
 package com.notsafenotcensored.relayctl.relay;
 
 import com.notsafenotcensored.relayctl.config.Configuration;
+import com.notsafenotcensored.relayctl.config.RelayConfig;
+import com.notsafenotcensored.relayctl.config.RelayState;
 import com.pi4j.io.gpio.*;
 
 import javax.annotation.PostConstruct;
@@ -22,22 +24,32 @@ public class RelayController implements Controller {
     private Configuration config;
 
     @PostConstruct
-    private void init() {
+    public RelayController init() {
+        logger.info("PostConstruct");
         load(config);
+        return this;
+    }
+
+    public RelayController config(Configuration config) {
+        this.config = config; return this;
     }
 
     private void load(Configuration config) {
         config.getRelays().forEach(this::addRelay);
     }
 
-    private void addRelay(Relay relay) {
+    private void addRelay(final RelayConfig relayConfig) {
+        Relay relay = new Relay(relayConfig);
+        logger.info("Adding relay: "+relay.getName());
         if (relay != null) {
             relay.setController(this);
             int index = relays.indexOf(relay);
             if (index > -1) {
-                relays.get(index).setName(relay.getName());
-                relays.get(index).setRules(relay.getRules());
+                logger.info("Updating relay "+relay.getName());
+                relays.get(index).getRelayConfig().setName(relay.getName());
+                relays.get(index).getRelayConfig().setRules(relay.getRules());
             } else {
+                logger.info("Initializing relay "+relay.getName());
                 relay.setGpioPin(makeGpioPin(relay));
                 relays.add(relay);
             }
@@ -54,6 +66,11 @@ public class RelayController implements Controller {
         gpio.shutdown();
     }
 
+    @Override
+    public List<Relay> getRelays() {
+        return relays.stream().collect(Collectors.toList());
+    }
+
     public Relay getRelayById(int id) {
         return relays.stream().filter(relay -> relay.getId() == id).findFirst().get();
     }
@@ -62,16 +79,16 @@ public class RelayController implements Controller {
         return relay.getGpioPin() != null && relay.getGpioPin().getState() == PinState.LOW;
     }
 
-    public boolean off(Relay relay) {
+    public List<Relay> off(Relay relay) {
         if (isExecutable(relay)) {
             relay.getGpioPin().setState(PinState.HIGH);
-        }   return getState(relay);
+        }   return getRelays();
     }
 
-    public boolean on(Relay relay) {
+    public List<Relay> on(Relay relay) {
         if (isExecutable(relay)) {
             relay.getGpioPin().setState(PinState.LOW);
-        }   return getState(relay);
+        }   return getRelays();
     }
 
     public boolean isExecutable(Relay relay) {

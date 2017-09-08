@@ -1,8 +1,8 @@
 package com.notsafenotcensored.relayctl.relay;
 
+import com.notsafenotcensored.relayctl.config.RelayConfig;
+import com.notsafenotcensored.relayctl.config.RelayState;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.PinState;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.util.ArrayList;
@@ -10,48 +10,25 @@ import java.util.List;
 import java.util.Objects;
 
 public class Relay {
-    private int id = -1;
-    private String name = "";
-
-    
-    private List<Rule> rules = new ArrayList<>();
-
-    @JsonIgnore
     private transient Controller controller;
 
-    @JsonIgnore
     private transient GpioPinDigitalOutput gpioPin;
 
-    public int getId() {
-        return id;
+    private RelayConfig relayConfig;
+
+    public Relay(RelayConfig relayConfig) {
+        this.relayConfig = relayConfig;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Relay() {
     }
 
-    public Relay id(int id) {
-        this.id = id; return this;
+    public RelayConfig getRelayConfig() {
+        return relayConfig;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Relay name(String name) {
-        this.name = name; return this;
-    }
-
-    public List<Rule> getRules() {
-        return rules;
-    }
-
-    public void setRules(List<Rule> rules) {
-        this.rules = rules;
+    public void setRelayConfig(RelayConfig relayConfig) {
+        this.relayConfig = relayConfig;
     }
 
     public Controller getController() {
@@ -60,6 +37,20 @@ public class Relay {
 
     public void setController(Controller controller) {
         this.controller = controller;
+    }
+
+    public int getId() {
+        return relayConfig.getId();
+    }
+    public String getName() {
+        return relayConfig.getName();
+    }
+    public List<Rule> getRules() {
+        return relayConfig.getRules();
+    }
+
+    public RelayState toState() {
+        return new RelayState(getRelayConfig(), getState());
     }
 
     public boolean getState() {
@@ -75,13 +66,13 @@ public class Relay {
     }
 
     // Returns TRUE if on.
-    public boolean on() {
+    public List<Relay> on() {
         return controller.on(this);
     }
 
 
     // Returns TRUE if off.
-    public boolean off() {
+    public List<Relay> off() {
         return controller.off(this);
     }
 
@@ -90,11 +81,12 @@ public class Relay {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Relay relay = (Relay) o;
-        return id == relay.id;
+        return getRelayConfig() == relay.getRelayConfig();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(getRelayConfig());
     }
+
 }

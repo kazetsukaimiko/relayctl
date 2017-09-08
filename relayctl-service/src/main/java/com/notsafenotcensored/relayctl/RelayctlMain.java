@@ -1,6 +1,9 @@
 package com.notsafenotcensored.relayctl;
 
 
+import com.notsafenotcensored.relayctl.cdi.ConfigurationProducer;
+import com.notsafenotcensored.relayctl.relay.Controller;
+import com.notsafenotcensored.relayctl.relay.Relay;
 import com.notsafenotcensored.relayctl.relay.RelayController;
 import com.pi4j.io.gpio.*;
 import io.undertow.Undertow;
@@ -26,19 +29,19 @@ public class RelayctlMain {
 
     public static void test() throws InterruptedException {
         System.out.println("Making rc.");
-        RelayController rc = new RelayController();
+        Controller rc = new RelayController().config(ConfigurationProducer.getConfiguration()).init();
 
         System.out.println("Setting relays");
-        for (GpioPinDigitalOutput gpioPDO : rc.getRelays()) {
-            System.out.println("Setting gpio "+gpioPDO.getName());
-            gpioPDO.setState(PinState.LOW);
+        for (Relay relay : rc.getRelays()) {
+            System.out.println("Setting relay "+relay.getName());
+            relay.on();
             promptEnterKey();
         }
 
         System.out.println("Setting relays");
-        for (GpioPinDigitalOutput gpioPDO : rc.getRelays()) {
-            System.out.println("Setting gpio "+gpioPDO.getName());
-            gpioPDO.setState(PinState.HIGH);
+        for (Relay relay : rc.getRelays()) {
+            System.out.println("Setting relay "+relay.getName());
+            relay.off();
             promptEnterKey();
         }
         rc.shutdown();

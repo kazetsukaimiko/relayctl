@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>relayctl</artifactId>
+    <groupId>com.notsafenotcensored</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.notsafenotcensored</groupId>
-  <artifactId>relayctl</artifactId>
-  <name>Relayctl</name>
-  <version>1.0.0-SNAPSHOT</version>
+  <groupId>com.notsafenotcensored.relayctl</groupId>
+  <artifactId>relayctl-service</artifactId>
+  <name>Relayctl Service</name>
   <url>http://maven.apache.org</url>
   <build>
     <finalName>relayctl</finalName>
@@ -68,16 +72,6 @@
       </plugin>
     </plugins>
   </build>
-  <repositories>
-    <repository>
-      <snapshots>
-        <updatePolicy>always</updatePolicy>
-      </snapshots>
-      <id>oss-snapshots-repo</id>
-      <name>Sonatype OSS Maven Repository</name>
-      <url>https://oss.sonatype.org/content/groups/public</url>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>javax</groupId>
@@ -104,16 +98,5 @@
       </exclusions>
     </dependency>
   </dependencies>
-  <properties>
-    <undertow.version>1.4.18.Final</undertow.version>
-    <junit.version>4.11</junit.version>
-    <failOnMissingWebXml>false</failOnMissingWebXml>
-    <tests.threadCount>2</tests.threadCount>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <weld.version>2.4.4.Final</weld.version>
-    <resteasy.version>3.1.4.Final</resteasy.version>
-    <maven.compiler.source>1.8</maven.compiler.source>
-  </properties>
 </project>
 

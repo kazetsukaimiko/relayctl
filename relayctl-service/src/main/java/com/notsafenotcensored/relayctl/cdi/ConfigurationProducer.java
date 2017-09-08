@@ -3,6 +3,7 @@ package com.notsafenotcensored.relayctl.cdi;
 import com.notsafenotcensored.relayctl.config.Configuration;
 import com.notsafenotcensored.relayctl.config.DefaultConfiguration;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
@@ -16,16 +17,16 @@ import java.util.logging.Logger;
 
 public class ConfigurationProducer {
 
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private static Logger logger = Logger.getLogger(ConfigurationProducer.class.getName());
 
     @Inject
     private ObjectMapper mapper;
 
-    private Path configDirectory = Paths.get("~/.config/relayctl");
-    private Path configFile = Paths.get(configDirectory.toAbsolutePath().toString(), "config.json");
+    private static Path configDirectory = Paths.get(System.getProperty("user.dir"), "/.config/relayctl");
+    private static Path configFile = Paths.get(configDirectory.toAbsolutePath().toString(), "config.json");
 
     @Produces @Default
-    public Configuration getConfiguration() {
+    public static Configuration getConfiguration() {
         try {
             return loadConfiguration();
         } catch (IOException ioe) {
@@ -34,7 +35,8 @@ public class ConfigurationProducer {
         }
     }
 
-    public Configuration loadConfiguration() throws IOException {
+    public static Configuration loadConfiguration() throws IOException {
+        ObjectMapper mapper = new ObjectMapper().enable(SerializationConfig.Feature.INDENT_OUTPUT);
         Files.createDirectories(configDirectory);
         if (Files.isRegularFile(configFile)) {
             return mapper.readValue(configFile.toFile(), Configuration.class);
