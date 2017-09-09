@@ -7,6 +7,8 @@ DEADJOE
 *.war
 *.ear
 target/*
+*/target/*
 .idea
 .idea/*
 *.iml
+relayctl-api/dependency-reduced-pom.xml
