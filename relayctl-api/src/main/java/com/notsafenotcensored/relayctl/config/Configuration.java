@@ -1,7 +1,5 @@
 package com.notsafenotcensored.relayctl.config;
 
-import com.notsafenotcensored.relayctl.relay.Relay;
-
 import java.util.ArrayList;
 import java.util.List;
 

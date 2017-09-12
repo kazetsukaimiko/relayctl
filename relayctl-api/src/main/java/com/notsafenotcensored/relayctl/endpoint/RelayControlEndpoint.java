@@ -17,23 +17,23 @@ public interface RelayControlEndpoint {
     String STATE_PARAM = "state";
 
     @GET
-    public List<RelayState> getStatus();
+    public List<Relay> getStatus();
 
     @GET
-    @Path("/id/{"+RelayControlEndpoint.ID_PARAM+")")
-    public RelayState getRelayById(@PathParam(RelayControlEndpoint.ID_PARAM) int relayId);
+    @Path("/id/{"+RelayControlEndpoint.ID_PARAM+"}")
+    public Relay getRelayById(@PathParam(RelayControlEndpoint.ID_PARAM) String relayId);
 
     @GET
-    @Path("/id/{"+RelayControlEndpoint.ID_PARAM+")/{"+RelayControlEndpoint.STATE_PARAM+"}")
-    public List<RelayState> setRelayStateById(@PathParam(RelayControlEndpoint.ID_PARAM) int relayId, @PathParam(RelayControlEndpoint.STATE_PARAM) boolean state);
+    @Path("/id/{"+RelayControlEndpoint.ID_PARAM+"}/{"+RelayControlEndpoint.STATE_PARAM+"}")
+    public List<Relay> setRelayById(@PathParam(RelayControlEndpoint.ID_PARAM) String relayId, @PathParam(RelayControlEndpoint.STATE_PARAM) boolean state);
 
     @GET
-    @Path("/name/{"+RelayControlEndpoint.NAME_PARAM+")")
-    public List<RelayState> getRelaysByName(@PathParam(RelayControlEndpoint.NAME_PARAM) String relayName);
+    @Path("/name/{"+RelayControlEndpoint.NAME_PARAM+"}")
+    public List<Relay> getRelaysByName(@PathParam(RelayControlEndpoint.NAME_PARAM) String relayName);
 
     @GET
-    @Path("/name/{"+RelayControlEndpoint.NAME_PARAM+")/{"+RelayControlEndpoint.STATE_PARAM+"}")
-    public List<RelayState> setRelayStatesName(@PathParam(RelayControlEndpoint.NAME_PARAM) String relayName, @PathParam(RelayControlEndpoint.STATE_PARAM) boolean state);
+    @Path("/name/{"+RelayControlEndpoint.NAME_PARAM+"}/{"+RelayControlEndpoint.STATE_PARAM+"}")
+    public List<Relay> setRelaysByName(@PathParam(RelayControlEndpoint.NAME_PARAM) String relayName, @PathParam(RelayControlEndpoint.STATE_PARAM) boolean state);
 
 
 }

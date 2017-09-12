@@ -26,7 +26,7 @@ public class ConfigurationProducer {
     private static Path configFile = Paths.get(configDirectory.toAbsolutePath().toString(), "config.json");
 
     @Produces @Default
-    public static Configuration getConfiguration() {
+    public Configuration getConfiguration() {
         try {
             return loadConfiguration();
         } catch (IOException ioe) {
@@ -35,8 +35,7 @@ public class ConfigurationProducer {
         }
     }
 
-    public static Configuration loadConfiguration() throws IOException {
-        ObjectMapper mapper = new ObjectMapper().enable(SerializationConfig.Feature.INDENT_OUTPUT);
+    public Configuration loadConfiguration() throws IOException {
         Files.createDirectories(configDirectory);
         if (Files.isRegularFile(configFile)) {
             return mapper.readValue(configFile.toFile(), Configuration.class);

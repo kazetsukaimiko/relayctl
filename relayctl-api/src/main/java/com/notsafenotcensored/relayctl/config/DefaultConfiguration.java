@@ -1,6 +1,5 @@
 package com.notsafenotcensored.relayctl.config;
 
-import com.notsafenotcensored.relayctl.relay.Relay;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 

@@ -3,6 +3,7 @@ package com.notsafenotcensored.relayctl;
 import org.reflections.Reflections;
 
 import javax.inject.Singleton;
+import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Application;
 import java.lang.reflect.Modifier;
@@ -10,6 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@ApplicationPath("/")
 public class RelayctlApplication extends Application {
     private static final Reflections reflections = new Reflections(RelayctlMain.class.getPackage().getName());
     private final Set<Class<?>> classes;
@@ -19,10 +21,11 @@ public class RelayctlApplication extends Application {
         classes = reflections.getTypesAnnotatedWith(Path.class).stream()
                 .filter(klazz -> !klazz.isInterface())
                 .filter(klazz -> !Modifier.isAbstract(klazz.getModifiers()))
+                .peek(klazz -> System.out.println("Registering endpoint: " + klazz.getName()))
                 .collect(Collectors.toSet());
 
         singletons = reflections.getTypesAnnotatedWith(Singleton.class).stream()
-                .filter(singletonClass -> !Objects.equals(RelayService.class, singletonClass))
+                //.filter(singletonClass -> !Objects.equals(RelayService.class, singletonClass))
                 .map(singletonClass -> {
                     try {
                         return singletonClass.newInstance();

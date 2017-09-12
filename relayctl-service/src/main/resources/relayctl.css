@@ -1,0 +1,12 @@
+body {
+    font-size: 16px;
+    margin: 1.75em 0;
+    background-color: #454545;
+    color: #fff;
+}
+
+.relay {
+    display: inline-block;
+    position: relative;
+    width: 50%;
+}

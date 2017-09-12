@@ -1,22 +1,30 @@
 package com.notsafenotcensored.relayctl.relay;
 
-import com.notsafenotcensored.relayctl.config.RelayState;
+import com.notsafenotcensored.relayctl.relay.provider.RelayProvider;
 
-import java.util.List;
+import java.util.Set;
 
-public interface Controller {
+public abstract class Controller implements AutoCloseable {
 
-    List<Relay> getRelays();
+    public abstract RelayProvider getProvider();
 
-    Relay getRelayById(int id);
+    public Set<Relay> getRelays() {
+        return getProvider().getRelays();
+    }
 
-    boolean getState(Relay relay);
+    public Relay getRelayById(String id) {
+        return getProvider().getRelayById(id);
+    }
 
-    List<Relay> off(Relay relay);
+    public boolean getState(Relay relay) {
+        return relay.getState();
+    }
 
-    List<Relay> on(Relay relay);
+    public Set<Relay> off(Relay relay) {
+        relay.off(); return getRelays();
+    }
 
-    boolean isExecutable(Relay relay);
-
-    void shutdown();
+    public Set<Relay> on(Relay relay) {
+        relay.on(); return getRelays();
+    }
 }

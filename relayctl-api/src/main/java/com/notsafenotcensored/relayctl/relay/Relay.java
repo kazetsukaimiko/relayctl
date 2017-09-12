@@ -1,92 +1,37 @@
 package com.notsafenotcensored.relayctl.relay;
 
-import com.notsafenotcensored.relayctl.config.RelayConfig;
-import com.notsafenotcensored.relayctl.config.RelayState;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import org.codehaus.jackson.annotate.JsonIgnore;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-public class Relay {
-    private transient Controller controller;
+public abstract class Relay implements Comparable<Relay> {
 
-    private transient GpioPinDigitalOutput gpioPin;
+    public abstract String getId();
+    public abstract String getName();
+    public abstract boolean getState();
+    public abstract boolean setState(boolean state);
 
-    private RelayConfig relayConfig;
-
-    public Relay(RelayConfig relayConfig) {
-        this.relayConfig = relayConfig;
+    public boolean on() {
+        return setState(true);
+    }
+    public boolean off() {
+        return setState(false);
     }
 
-    public Relay() {
-    }
-
-    public RelayConfig getRelayConfig() {
-        return relayConfig;
-    }
-
-    public void setRelayConfig(RelayConfig relayConfig) {
-        this.relayConfig = relayConfig;
-    }
-
-    public Controller getController() {
-        return controller;
-    }
-
-    public void setController(Controller controller) {
-        this.controller = controller;
-    }
-
-    public int getId() {
-        return relayConfig.getId();
-    }
-    public String getName() {
-        return relayConfig.getName();
-    }
-    public List<Rule> getRules() {
-        return relayConfig.getRules();
-    }
-
-    public RelayState toState() {
-        return new RelayState(getRelayConfig(), getState());
-    }
-
-    public boolean getState() {
-        return controller.getState(this);
-    }
-
-    public GpioPinDigitalOutput getGpioPin() {
-        return gpioPin;
-    }
-
-    public void setGpioPin(GpioPinDigitalOutput gpioPin) {
-        this.gpioPin = gpioPin;
-    }
-
-    // Returns TRUE if on.
-    public List<Relay> on() {
-        return controller.on(this);
-    }
-
-
-    // Returns TRUE if off.
-    public List<Relay> off() {
-        return controller.off(this);
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Relay relay = (Relay) o;
-        return getRelayConfig() == relay.getRelayConfig();
+        Relay that = (Relay) o;
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(getRelayConfig());
+    public int compareTo(Relay relay) {
+        return String.valueOf(getName())
+                .compareTo(String.valueOf(relay != null ? relay.getName() : null));
     }
-
 }
