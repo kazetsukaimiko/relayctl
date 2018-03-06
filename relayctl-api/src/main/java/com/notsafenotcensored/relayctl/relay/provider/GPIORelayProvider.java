@@ -2,34 +2,23 @@ package com.notsafenotcensored.relayctl.relay.provider;
 
 import com.notsafenotcensored.relayctl.config.Configuration;
 import com.notsafenotcensored.relayctl.config.RelayConfig;
+import com.notsafenotcensored.relayctl.relay.GPIORelay;
 import com.notsafenotcensored.relayctl.relay.Relay;
 import com.pi4j.io.gpio.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-public class GPIORelayProvider extends RelayProvider {
+public class GPIORelayProvider extends RelayProvider implements AutoCloseable {
 
-    private static final GPIORelayProvider INSTANCE = new GPIORelayProvider();
+    private static final GPIORelayProvider INSTANCE = new GPIORelayProvider(Configuration.getLocal());
     private GpioController controller = null;
     private Set<Relay> relays = new HashSet<>();
+    private Configuration configuration;
 
-    private GPIORelayProvider() {
-
-    }
-
-    public GPIORelayProvider get() {
-        return this;
-    }
-
-    public static GPIORelayProvider load(List<RelayConfig> relayConfigs) {
-        INSTANCE.loadConfigs(relayConfigs); return INSTANCE;
-    }
-
-    private GPIORelayProvider loadConfigs(List<RelayConfig> relayConfigs) {
+    private GPIORelayProvider(Configuration configuration) {
+        this.configuration = configuration;
         try {
             close();
         } catch (Exception e) {
@@ -38,35 +27,17 @@ public class GPIORelayProvider extends RelayProvider {
         relays = new HashSet<>();
         controller = GpioFactory.getInstance();
 
-        relayConfigs.stream().map(this::addRelay).forEach(relays::add);
+        configuration
+                .getRelays()
+                .stream()
+                .map(this::addRelay)
+                .forEach(relays::add);
 
-        return this;
     }
-
 
     private Relay addRelay(final RelayConfig relayConfig) {
         final GpioPinDigitalOutput backingPin = makeGpioPin(relayConfig.getId(), relayConfig.getName());
-        return new Relay() {
-            @Override
-            public String getId() {
-                return String.valueOf(relayConfig.getId());
-            }
-
-            @Override
-            public String getName() {
-                return relayConfig.getName();
-            }
-
-            @Override
-            public boolean getState() {
-                return backingPin.isState(PinState.LOW);
-            }
-
-            @Override
-            public boolean setState(boolean state) {
-                backingPin.setState(state? PinState.LOW : PinState.HIGH); return getState();
-            }
-        };
+        return new GPIORelay(relayConfig, backingPin);
     }
 
     private GpioPinDigitalOutput makeGpioPin(int pinAddress, String name) {
@@ -75,10 +46,6 @@ public class GPIORelayProvider extends RelayProvider {
         return gpioPinDigitalOutput;
     }
 
-    @Override
-    public Set<Relay> getRelays() {
-        return relays;
-    }
 
     @Override
     public void close() throws Exception {
@@ -86,5 +53,13 @@ public class GPIORelayProvider extends RelayProvider {
             controller.shutdown();
             controller = null;
         }
+    }
+
+    @Override
+    public Relay getRelay(RelayConfig relayConfig) {
+        return relays.stream()
+                .filter(r -> Objects.equals(r.getId(), String.valueOf(relayConfig.getId())))
+                .findFirst()
+                .orElse(null);
     }
 }

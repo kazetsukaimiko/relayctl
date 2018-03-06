@@ -1,6 +1,5 @@
 package com.notsafenotcensored.relayctl.cdi;
 
-import com.notsafenotcensored.relayctl.GPIORelayController;
 import com.notsafenotcensored.relayctl.config.Configuration;
 import com.notsafenotcensored.relayctl.relay.Controller;
 
@@ -14,16 +13,16 @@ public class ControllerProducer {
     @Inject
     private Configuration config;
 
-    private GPIORelayController gpioRelayController;
+    private Controller controller;
 
     @Produces @Default
-    public GPIORelayController getGpioRelayController() {
+    public Controller getController() {
         System.out.println("Resolving Injection Point");
-        if (gpioRelayController == null) {
-            gpioRelayController = new GPIORelayController(config);
+        if (controller == null) {
+            controller = new Controller(config);
         }
-        System.out.println("COntroller: "+gpioRelayController);
-        return gpioRelayController;
+        System.out.println("COntroller: "+controller);
+        return controller;
     }
 
 }

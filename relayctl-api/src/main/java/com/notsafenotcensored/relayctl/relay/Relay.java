@@ -4,8 +4,9 @@ import java.util.Objects;
 
 public abstract class Relay implements Comparable<Relay> {
 
-    public abstract String getId();
+    public abstract int getId();
     public abstract String getName();
+    public abstract String getSource();
     public abstract boolean getState();
     public abstract boolean setState(boolean state);
 

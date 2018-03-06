@@ -1,7 +1,6 @@
 package com.notsafenotcensored.relayctl.endpoint;
 
 import com.notsafenotcensored.relayctl.config.Configuration;
-import com.notsafenotcensored.relayctl.config.DefaultConfiguration;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;

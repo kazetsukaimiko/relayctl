@@ -35,6 +35,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.11</version>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
@@ -54,7 +60,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>com.notsafenotcensored.relayctl.RelayctlMain</mainClass>
+              <mainClass>com.notsafenotcensored.relayctl.RPi3DaemonMain</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -115,6 +121,14 @@
           </execution>
         </executions>
       </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <source>9</source>
+                <target>9</target>
+            </configuration>
+        </plugin>
 
     </plugins>
   </build>

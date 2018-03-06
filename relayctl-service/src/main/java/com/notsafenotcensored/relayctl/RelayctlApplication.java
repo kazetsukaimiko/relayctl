@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @ApplicationPath("/")
 public class RelayctlApplication extends Application {
-    private static final Reflections reflections = new Reflections(RelayctlMain.class.getPackage().getName());
+    private static final Reflections reflections = new Reflections(RelayctlApplication.class.getPackage().getName());
     private final Set<Class<?>> classes;
     private final Set<Object> singletons;
 
@@ -21,6 +21,8 @@ public class RelayctlApplication extends Application {
         classes = reflections.getTypesAnnotatedWith(Path.class).stream()
                 .filter(klazz -> !klazz.isInterface())
                 .filter(klazz -> !Modifier.isAbstract(klazz.getModifiers()))
+                .filter(klazz -> !RelayControlDaemon.class.isAssignableFrom(klazz))
+                .filter(klazz -> !getClass().isAssignableFrom(klazz))
                 .peek(klazz -> System.out.println("Registering endpoint: " + klazz.getName()))
                 .collect(Collectors.toSet());
 

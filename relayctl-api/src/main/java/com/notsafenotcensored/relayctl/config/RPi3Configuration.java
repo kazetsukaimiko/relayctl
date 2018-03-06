@@ -1,5 +1,6 @@
 package com.notsafenotcensored.relayctl.config;
 
+import com.notsafenotcensored.relayctl.relay.provider.GPIORelayProvider;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 
@@ -8,19 +9,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DefaultConfiguration extends Configuration {
+public class RPi3Configuration extends Configuration {
 
-    public DefaultConfiguration() {
+    public RPi3Configuration() {
         setListenPort(7272);
+        setBindAddress("0.0.0.0");
         setRelays(generateDefaults());
     }
 
     private List<RelayConfig> generateDefaults() {
-        List<RelayConfig> relays = new ArrayList<>();
         int[] i = {1};
         return pins.stream().map(pin -> {
             String relayName = "RELAY_"+i[0]++;
-            return new RelayConfig().id(pin.getAddress()).name(relayName);
+            return new RelayConfig()
+                    .id(pin.getAddress())
+                    .name(relayName)
+                    .source(GPIORelayProvider.class.getSimpleName());
         }).collect(Collectors.toList());
     }
 

@@ -94,7 +94,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>com.notsafenotcensored.relayctl.RelayctlMain</mainClass>
+              <mainClass>com.notsafenotcensored.relayctl.RPi3DaemonMain</mainClass>
             </manifest>
           </archive>
         </configuration>

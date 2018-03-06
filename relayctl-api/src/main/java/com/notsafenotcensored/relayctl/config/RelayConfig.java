@@ -9,6 +9,7 @@ import java.util.Objects;
 public class RelayConfig {
     private int id = -1;
     private String name = "";
+    private String source = null;
     private List<Rule> rules = new ArrayList<>();
 
     public int getId() {
@@ -27,6 +28,14 @@ public class RelayConfig {
         this.name = name;
     }
 
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
     public List<Rule> getRules() {
         return rules;
     }
@@ -43,17 +52,23 @@ public class RelayConfig {
         this.name = name; return this;
     }
 
+    public RelayConfig source(String source) {
+        setSource(source); return this;
+    }
+
     public RelayConfig(RelayConfig relayConfig) {
         this(
                 relayConfig.getId(),
                 relayConfig.getName(),
+                relayConfig.getSource(),
                 relayConfig.getRules()
         );
     }
 
-    public RelayConfig(int id, String name, List<Rule> rules) {
+    public RelayConfig(int id, String name, String source, List<Rule> rules) {
         this.id = id;
         this.name = name;
+        this.source = source;
         this.rules = rules;
     }
 
@@ -72,4 +87,5 @@ public class RelayConfig {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

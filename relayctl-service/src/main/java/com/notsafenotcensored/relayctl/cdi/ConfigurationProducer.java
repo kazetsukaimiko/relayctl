@@ -1,47 +1,46 @@
 package com.notsafenotcensored.relayctl.cdi;
 
 import com.notsafenotcensored.relayctl.config.Configuration;
-import com.notsafenotcensored.relayctl.config.DefaultConfiguration;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
+import com.notsafenotcensored.relayctl.config.RPi3Configuration;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Initialized;
+import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@ApplicationScoped
 public class ConfigurationProducer {
 
     private static Logger logger = Logger.getLogger(ConfigurationProducer.class.getName());
 
-    @Inject
-    private ObjectMapper mapper;
 
-    private static Path configDirectory = Paths.get(System.getProperty("user.dir"), "/.config/relayctl");
-    private static Path configFile = Paths.get(configDirectory.toAbsolutePath().toString(), "config.json");
+    public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
+        if (Configuration.getLocal() != null) {
+            System.out.println("Loading local.");
+            configuration = Configuration.getLocal();
+            return;
+        }
+
+        System.out.println("Loading from FS.");
+        try {
+            configuration = Configuration.loadConfiguration();
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.log(Level.WARNING, "Couldn't load configuration, defaulting: ", e);
+            configuration = new RPi3Configuration();
+        }
+    }
+
+    private Configuration configuration;
 
     @Produces @Default
     public Configuration getConfiguration() {
-        try {
-            return loadConfiguration();
-        } catch (IOException ioe) {
-            logger.log(Level.WARNING, "Couldn't load configuration, defaulting: ", ioe);
-            return new DefaultConfiguration();
-        }
+        System.out.println("Reading..");
+        return configuration;
     }
 
-    public Configuration loadConfiguration() throws IOException {
-        Files.createDirectories(configDirectory);
-        if (Files.isRegularFile(configFile)) {
-            return mapper.readValue(configFile.toFile(), Configuration.class);
-        } else {
-            mapper.writeValue(configFile.toFile(), new DefaultConfiguration());
-            return loadConfiguration();
-        }
-    }
 }
