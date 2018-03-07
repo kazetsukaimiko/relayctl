@@ -7,11 +7,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path(RelayControlEndpoint.RELAYCTL_ROOT)
+@Path(RelayControlEndpoint.ROOT)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface RelayControlEndpoint {
-    String RELAYCTL_ROOT = "/relay";
+    String ROOT = "/relay";
     String ID_PARAM = "id";
     String NAME_PARAM = "name";
     String STATE_PARAM = "state";

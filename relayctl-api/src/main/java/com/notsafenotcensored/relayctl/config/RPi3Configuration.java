@@ -1,12 +1,14 @@
 package com.notsafenotcensored.relayctl.config;
 
+import com.notsafenotcensored.relayctl.control.Control;
+import com.notsafenotcensored.relayctl.relay.RelayState;
 import com.notsafenotcensored.relayctl.relay.provider.GPIORelayProvider;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class RPi3Configuration extends Configuration {
@@ -14,10 +16,60 @@ public class RPi3Configuration extends Configuration {
     public RPi3Configuration() {
         setListenPort(7272);
         setBindAddress("0.0.0.0");
-        setRelays(generateDefaults());
+        setRelays(generateDefaultRelays());
+        setControls(generateDefaultControls());
     }
 
-    private List<RelayConfig> generateDefaults() {
+    private RelayState getRelayAs(int id, boolean state) {
+        return getRelays()
+                .stream()
+                .filter(relayConfig -> Objects.equals(id, relayConfig.getId()))
+                .findFirst()
+                .map(relayConfig -> new RelayState(relayConfig, state))
+                .orElse(null);
+
+    }
+
+    private List<Control> generateDefaultControls() {
+        return Arrays.asList(
+                new Control()
+                    .name("Rear Blower")
+                    .state(
+                        "Off",
+                        Arrays.asList(
+                                getRelayAs(1, false),
+                                getRelayAs(2, false),
+                                getRelayAs(3, false)
+                        )
+                )
+                    .state(
+                        "Low",
+                        Arrays.asList(
+                                getRelayAs(1, true),
+                                getRelayAs(2, false),
+                                getRelayAs(3, false)
+                        )
+                    )
+                    .state(
+                        "Medium",
+                        Arrays.asList(
+                                getRelayAs(1, true),
+                                getRelayAs(2, true),
+                                getRelayAs(3, false)
+                        )
+                    )
+                    .state(
+                        "High",
+                        Arrays.asList(
+                                getRelayAs(1, true),
+                                getRelayAs(2, true),
+                                getRelayAs(3, true)
+                        )
+                )
+        );
+    }
+
+    private List<RelayConfig> generateDefaultRelays() {
         int[] i = {1};
         return pins.stream().map(pin -> {
             String relayName = "RELAY_"+i[0]++;

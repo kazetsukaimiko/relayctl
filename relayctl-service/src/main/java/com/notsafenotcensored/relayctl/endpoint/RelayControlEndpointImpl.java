@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Path(RelayControlEndpoint.RELAYCTL_ROOT)
+@Path(RelayControlEndpoint.ROOT)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class RelayControlEndpointImpl implements RelayControlEndpoint {
@@ -20,12 +20,12 @@ public class RelayControlEndpointImpl implements RelayControlEndpoint {
 
     @GET
     public List<RelayState> getStatus() {
-        System.out.println(controller);
         return controller
                 .getRelays()
                 .stream()
                 .map(RelayState::new)
                 .sorted()
+                .peek(System.out::println)
                 .collect(Collectors.toList());
     }
 
@@ -41,7 +41,9 @@ public class RelayControlEndpointImpl implements RelayControlEndpoint {
     @GET
     @Path("/id/{"+RelayControlEndpoint.ID_PARAM+"}/{"+RelayControlEndpoint.STATE_PARAM+"}")
     public List<RelayState> setRelayById(@PathParam(RelayControlEndpoint.ID_PARAM) int relayId, @PathParam(RelayControlEndpoint.STATE_PARAM) boolean state) {
-        getRelayById(relayId).setState(state);
+        controller
+                .getRelayById(relayId)
+                .ifPresent(relay -> relay.setState(state));
         return getStatus();
     }
 

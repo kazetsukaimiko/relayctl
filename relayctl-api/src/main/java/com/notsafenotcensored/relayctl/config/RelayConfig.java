@@ -88,4 +88,16 @@ public class RelayConfig {
         return Objects.hash(id);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n\nRelayConfig:");
+        sb.append(Configuration.DELIM);
+        sb.append("\nId: "); sb.append(getId());
+        sb.append("\nName: "); sb.append(getName());
+        sb.append("\nSource: "); sb.append(getSource());
+        sb.append("\nRules: "); sb.append(getRules());
+        sb.append(Configuration.DELIM);
+        return sb.toString();
+    }
 }

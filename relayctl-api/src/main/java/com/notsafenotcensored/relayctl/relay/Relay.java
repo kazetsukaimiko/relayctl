@@ -10,6 +10,10 @@ public abstract class Relay implements Comparable<Relay> {
     public abstract boolean getState();
     public abstract boolean setState(boolean state);
 
+    public String getMyType() {
+        return getClass().getSimpleName();
+    }
+
     public boolean on() {
         return setState(true);
     }

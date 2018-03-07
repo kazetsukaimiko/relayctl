@@ -2,60 +2,51 @@ package com.notsafenotcensored.relayctl.relay;
 
 import com.notsafenotcensored.relayctl.config.Configuration;
 import com.notsafenotcensored.relayctl.config.RelayConfig;
+import com.notsafenotcensored.relayctl.control.Control;
+import com.notsafenotcensored.relayctl.control.ControlState;
 import com.notsafenotcensored.relayctl.relay.provider.RelayProvider;
-
 import org.reflections.Reflections;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class Controller {
     private static Logger LOGGER = Logger.getLogger(Controller.class.getName());
 
     private final Set<Relay> relays;
+    private final Set<RelayProvider> providers;
 
     private final Configuration configuration;
-    public Controller(Configuration configuration) {
+    public Controller(Configuration configuration, Set<RelayProvider> providers) {
         this.configuration = configuration;
+        this.providers = providers;
         this.relays = populate();
     }
 
-    private Set<RelayProvider> getProviders() {
-        Reflections reflections = new Reflections("com.notsafenotcensored");
-        Set<Class<? extends RelayProvider>> providerClasses = reflections.getSubTypesOf(RelayProvider.class);
-        return providerClasses.stream()
-                .map(providerClass -> {
-                    try {
-                        return providerClass.getDeclaredConstructor().newInstance();
-                    } catch (Exception e) {
-                        LOGGER.log(Level.FINEST, "Could not instantiate provider: ", e);
-                        return null;
-                    }
-                })
-                .filter(RelayProvider.class::isInstance)
-                .map(RelayProvider.class::cast)
-                .collect(Collectors.toSet());
-
-    }
-
     private Set<Relay> populate() {
-        Set<RelayProvider> providers = getProviders();
+        System.out.println("POPULATE");
         return configuration
                 .getRelays()
                 .stream()
-                .map(relayConfig -> ofProviders(relayConfig, providers))
-                .flatMap(Optional::stream)
+                .flatMap(this::ofProviders)
+                .peek(relay -> System.out.println("Relay Configured: \n" + new RelayState(relay).toString()))
                 .collect(Collectors.toSet());
     }
 
-    private Optional<Relay> ofProviders(RelayConfig relayConfig, Set<RelayProvider> providers) {
+    private Stream<Relay> ofProviders(RelayConfig relayConfig) {
         return providers
                 .stream()
+                .peek(relayProvider -> System.out.println("Considering: " + relayProvider))
                 .filter(relayProvider -> relayProvider.handles(relayConfig))
+                .peek(relayProvider -> System.out.println("Found provider: " + relayProvider.getClass().getSimpleName() + " for Relay " + relayConfig.getName()))
                 .map(relayProvider -> relayProvider.getRelay(relayConfig))
-                .findFirst();
+                .flatMap(Optional::stream);
     }
 
     public Set<Relay> getRelays() {
@@ -69,17 +60,58 @@ public final class Controller {
                 .findFirst();
     }
 
-    /*
-    public boolean getState(Relay relay) {
-        return relay.getState();
+    public List<ControlState> getControls() {
+        return configuration.getControls()
+                .stream()
+                .map(this::getControlState)
+                .flatMap(Optional::stream)
+                .collect(Collectors.toList());
     }
 
-    public Set<Relay> off(Relay relay) {
-        relay.off(); return getRelays();
+    public Optional<ControlState> getControlState(Control control) {
+        List<RelayState> allStates = getRelays()
+                .stream()
+                .map(RelayState::new)
+                .collect(Collectors.toList());
+        return control.getStates()
+                .entrySet()
+                .stream()
+                .filter(e -> {
+                    List<RelayState> states = e.getValue();
+                    return allStates.containsAll(states);
+                })
+                .map(e -> new ControlState(control))
+                .findFirst();
     }
 
-    public Set<Relay> on(Relay relay) {
-        relay.on(); return getRelays();
+    public List<ControlState> setControlState(String controlName, String desiredState) {
+        configuration.getControls()
+                .stream()
+                .filter(control -> control.getName().equals(controlName))
+                .forEach(control -> {
+                    Optional.of(control)
+                            .map(Control::getStates)
+                            .map(map -> map.get(desiredState))
+                            .ifPresent(stateList -> {
+                                stateList
+                                        .forEach(relayState -> {
+                                            setRelayState(relayState);
+                                        });
+                            });
+                });
+        return getControls();
     }
-    */
+
+    private List<RelayState> setRelayState(RelayState relayState) {
+        relays
+                .stream()
+                .filter(relay -> Objects.equals(relay.getId(), relayState.getId()))
+                .forEach(relay -> relay.setState(relayState.getState()));
+        return relays
+                .stream()
+                .sorted()
+                .map(RelayState::new)
+                .collect(Collectors.toList());
+    }
+
 }

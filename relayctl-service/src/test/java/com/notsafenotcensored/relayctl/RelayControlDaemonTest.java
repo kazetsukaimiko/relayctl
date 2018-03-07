@@ -5,6 +5,7 @@ import com.notsafenotcensored.relayctl.config.FauxConfiguration;
 import com.notsafenotcensored.relayctl.endpoint.RelayControlEndpoint;
 import com.notsafenotcensored.relayctl.relay.RelayState;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,12 +18,12 @@ public class RelayControlDaemonTest {
     private static final Configuration configuration = new FauxConfiguration();
     private static RelayControlDaemon controller;
     private static RelayControlEndpoint endpoint;
-    @BeforeClass
-    public static void before() throws InterruptedException {
+    @Before
+    public void before() throws InterruptedException {
         controller = new RelayControlDaemon(configuration);
         controller.start();
         endpoint = (RelayControlEndpoint) controller;
-        //Thread.sleep(10000);
+        Thread.sleep(2500);
     }
 
     @After
@@ -35,8 +36,7 @@ public class RelayControlDaemonTest {
     @Test
     public void testConfigurationLoads() {
         List<RelayState> relayStateList = endpoint.getStatus();
-
-        assertEquals(relayStateList.size(), configuration.getRelays().size());
+        assertEquals(configuration.getRelays().size(), relayStateList.size());
     }
 
     @Test

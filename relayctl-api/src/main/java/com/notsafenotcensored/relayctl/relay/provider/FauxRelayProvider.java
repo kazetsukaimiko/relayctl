@@ -1,11 +1,13 @@
 package com.notsafenotcensored.relayctl.relay.provider;
 
+import com.notsafenotcensored.relayctl.config.Configuration;
 import com.notsafenotcensored.relayctl.config.RelayConfig;
 import com.notsafenotcensored.relayctl.relay.FauxRelay;
 import com.notsafenotcensored.relayctl.relay.Relay;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -29,6 +31,8 @@ public class FauxRelayProvider extends RelayProvider implements AutoCloseable {
         this(16);
     }
 
+
+
     public Set<Relay> getRelays() {
         return relays;
     }
@@ -40,11 +44,15 @@ public class FauxRelayProvider extends RelayProvider implements AutoCloseable {
     }
 
     @Override
-    public Relay getRelay(RelayConfig relayConfig) {
+    public Optional<Relay> getRelay(RelayConfig relayConfig) {
         return relays
                 .stream()
                 .filter(relay -> Objects.equals(relay.getId(), relayConfig.getId()))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
+    }
+
+    @Override
+    public RelayProvider load(Configuration configuration) {
+        return this;
     }
 }
