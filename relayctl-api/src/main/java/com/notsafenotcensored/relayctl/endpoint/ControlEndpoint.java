@@ -16,15 +16,15 @@ public interface ControlEndpoint {
     String STATE_PARAM = "state";
 
     @GET
-    public List<ControlState> getStatus();
+    List<ControlState> getStatus();
 
     @GET
     @Path("/name/{"+ ControlEndpoint.NAME_PARAM+"}")
-    public List<ControlState> getControlByName(@PathParam(ControlEndpoint.NAME_PARAM) String controlName);
+    List<ControlState> getControlByName(@PathParam(ControlEndpoint.NAME_PARAM) String controlName);
 
     @GET
     @Path("/name/{"+ ControlEndpoint.NAME_PARAM+"}/{"+ ControlEndpoint.STATE_PARAM+"}")
-    public List<ControlState> setControlByName(@PathParam(ControlEndpoint.NAME_PARAM) String controlName, @PathParam(ControlEndpoint.STATE_PARAM) String state);
+    List<ControlState> setControlByName(@PathParam(ControlEndpoint.NAME_PARAM) String controlName, @PathParam(ControlEndpoint.STATE_PARAM) String state);
 
 
 }

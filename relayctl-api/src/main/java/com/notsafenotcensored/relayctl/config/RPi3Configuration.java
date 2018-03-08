@@ -30,6 +30,17 @@ public class RPi3Configuration extends Configuration {
 
     }
 
+
+    private RelayState getRelayAs(String name, boolean state) {
+        return getRelays()
+                .stream()
+                .filter(relayConfig -> Objects.equals(name, relayConfig.getName()))
+                .findFirst()
+                .map(relayConfig -> new RelayState(relayConfig, state))
+                .orElse(null);
+
+    }
+
     private List<Control> generateDefaultControls() {
         return Arrays.asList(
                 new Control()
@@ -37,33 +48,33 @@ public class RPi3Configuration extends Configuration {
                     .state(
                         "Off",
                         Arrays.asList(
-                                getRelayAs(1, false),
-                                getRelayAs(2, false),
-                                getRelayAs(3, false)
+                                getRelayAs("RELAY_001", false),
+                                getRelayAs("RELAY_002", false),
+                                getRelayAs("RELAY_003", false)
                         )
                 )
                     .state(
                         "Low",
                         Arrays.asList(
-                                getRelayAs(1, true),
-                                getRelayAs(2, false),
-                                getRelayAs(3, false)
+                                getRelayAs("RELAY_001", true),
+                                getRelayAs("RELAY_002", false),
+                                getRelayAs("RELAY_003", false)
                         )
                     )
                     .state(
                         "Medium",
                         Arrays.asList(
-                                getRelayAs(1, true),
-                                getRelayAs(2, true),
-                                getRelayAs(3, false)
+                                getRelayAs("RELAY_001", true),
+                                getRelayAs("RELAY_002", true),
+                                getRelayAs("RELAY_003", false)
                         )
                     )
                     .state(
                         "High",
                         Arrays.asList(
-                                getRelayAs(1, true),
-                                getRelayAs(2, true),
-                                getRelayAs(3, true)
+                                getRelayAs("RELAY_001", true),
+                                getRelayAs("RELAY_002", true),
+                                getRelayAs("RELAY_003", true)
                         )
                 )
         );
@@ -72,7 +83,7 @@ public class RPi3Configuration extends Configuration {
     private List<RelayConfig> generateDefaultRelays() {
         int[] i = {1};
         return pins.stream().map(pin -> {
-            String relayName = "RELAY_"+i[0]++;
+            String relayName = String.format("RELAY_%03d", i[0]++);
             return new RelayConfig()
                     .id(pin.getAddress())
                     .name(relayName)

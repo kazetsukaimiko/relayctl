@@ -8,11 +8,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path(ConfigurationEndpoint.CONFIG_ROOT)
+@Path(ConfigurationEndpoint.ROOT)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface ConfigurationEndpoint {
-    static final String CONFIG_ROOT = "/config";
+    String ROOT = "/config";
 
     @GET
     Configuration getConfiguration();

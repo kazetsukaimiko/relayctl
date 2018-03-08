@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+
+rsync --progress --delete -as ~/workspace/relayctl ${1}:/home/luna/workspace/ && \
+ssh "${1}" "cd /home/luna/workspace/relayctl/relayctl-service/target/ && java -cp 'lib/*:*' com.notsafenotcensored.relayctl.RPi3DaemonMain"
+

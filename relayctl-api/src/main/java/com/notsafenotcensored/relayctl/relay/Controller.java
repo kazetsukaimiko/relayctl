@@ -73,6 +73,7 @@ public final class Controller {
                 .stream()
                 .map(RelayState::new)
                 .collect(Collectors.toList());
+
         return control.getStates()
                 .entrySet()
                 .stream()
@@ -80,7 +81,7 @@ public final class Controller {
                     List<RelayState> states = e.getValue();
                     return allStates.containsAll(states);
                 })
-                .map(e -> new ControlState(control))
+                .map(e -> new ControlState(control, e.getKey()))
                 .findFirst();
     }
 

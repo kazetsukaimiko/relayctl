@@ -10,11 +10,8 @@ import java.util.List;
 @Path(RelayControlEndpoint.ROOT)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public interface RelayControlEndpoint {
+public interface RelayControlEndpoint extends EndpointCommon {
     String ROOT = "/relay";
-    String ID_PARAM = "id";
-    String NAME_PARAM = "name";
-    String STATE_PARAM = "state";
 
     @GET
     public List<RelayState> getStatus();

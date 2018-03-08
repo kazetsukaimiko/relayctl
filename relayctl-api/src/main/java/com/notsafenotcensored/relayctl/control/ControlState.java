@@ -36,9 +36,9 @@ public class ControlState {
 
     }
 
-    public ControlState(Control control) {
+    public ControlState(Control control, String activeState) {
         setName(control.getName());
         setAvailableStates(new ArrayList<>(control.getStates().keySet()));
-        setActiveState(getAvailableStates().stream().findFirst().orElse(null));
+        setActiveState(activeState);
     }
 }

@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+
+mvn clean package -DskipTests && relayctl_test "${1}"
+
+

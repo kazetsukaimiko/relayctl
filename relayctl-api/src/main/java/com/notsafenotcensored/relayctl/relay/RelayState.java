@@ -88,7 +88,6 @@ public class RelayState implements Comparable<RelayState> {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id, name, source, state);
     }
 }
