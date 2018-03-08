@@ -76,7 +76,21 @@ public class RPi3Configuration extends Configuration {
                                 getRelayAs("RELAY_002", true),
                                 getRelayAs("RELAY_003", true)
                         )
-                )
+                ),
+                new Control()
+                        .name("Bedroom Light")
+                        .state(
+                                "Off",
+                                Arrays.asList(
+                                        getRelayAs("RELAY_008", false)
+                                )
+                        )
+                        .state(
+                                "On",
+                                Arrays.asList(
+                                        getRelayAs("RELAY_008", true)
+                                )
+                        )
         );
     }
 
