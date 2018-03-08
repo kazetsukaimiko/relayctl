@@ -5,13 +5,8 @@ import com.notsafenotcensored.relayctl.config.RelayConfig;
 import com.notsafenotcensored.relayctl.control.Control;
 import com.notsafenotcensored.relayctl.control.ControlState;
 import com.notsafenotcensored.relayctl.relay.provider.RelayProvider;
-import org.reflections.Reflections;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.logging.Level;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,7 +31,7 @@ public final class Controller {
                 .stream()
                 .flatMap(this::ofProviders)
                 .peek(relay -> System.out.println("Relay Configured: \n" + new RelayState(relay).toString()))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     private Stream<Relay> ofProviders(RelayConfig relayConfig) {

@@ -138,7 +138,7 @@ function makeControlMenu(control) {
 
     var select = document.createElement("select");
     select.setAttribute("type","select");
-    select.id = "controlctl_" + control.name;
+    select.id = "controlctl_" + idFriendlyName(control.name);
 
     for (var i=0;i<control.availableStates.length;i++) {
         select.appendChild(makeControlMenuOption(control, control.availableStates[i]))
@@ -178,18 +178,22 @@ function getOrCreateRelay(relay) {
 
 function getOrCreateControl(control) {
     console.log("Loading control: " + control.name);
-    var controlDOM = document.getElementById("control_"+control.name);
+    var controlDOM = document.getElementById("control_"+idFriendlyName(control.name));
     if (controlDOM == null) {
-        controlDOM = makeDOM("div", "control_"+control.name);
+        controlDOM = makeDOM("div", "control_"+idFriendlyName(control.name));
         addClass(controlDOM, "control");
         controlDOM.appendChild(makeControlMenu(control));
         document.getElementById("controls").appendChild(controlDOM);
     } else {
-        document.allElements("#controlctl_"+control.name, function(elem) {
+        document.allElements("#controlctl_"+idFriendlyName(control.name), function(elem) {
             elem.value = control.activeState;
         });
     }
     return controlDOM;
+}
+
+function idFriendlyName(name) {
+    return name.replace(/\s+/g , "_");
 }
 
 

@@ -8,7 +8,7 @@ import java.util.*;
 // TODO : Perhaps Control should be a superset of relay in the future.
 public class Control {
     private String name;
-    private Map<String, List<RelayState>> states = new HashMap<>();
+    private Map<String, List<RelayState>> states = new LinkedHashMap<>();
 
     public String getName() {
         return name;

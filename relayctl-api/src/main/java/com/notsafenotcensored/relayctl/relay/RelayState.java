@@ -66,7 +66,7 @@ public class RelayState implements Comparable<RelayState> {
         setId(relayConfig.getId());
         setName(relayConfig.getName());
         setSource(relayConfig.getSource());
-        setMyType("Uhhhhhh");
+        setMyType(null);
         setState(state);
     }
 
